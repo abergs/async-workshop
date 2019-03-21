@@ -26,6 +26,9 @@ namespace async_workshop.Controllers
             var name = service.GetNameAsync();
 
             return $"My name is: {name}";
+
+            // returns  My name is: task.ToString();
+            // My name is: System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1+AsyncStateMachineBox`1[System.String,async_workshop.Controllers.MyService+<GetNameAsync>d__0]
         }
 
         [HttpGet("/name-correct")]
@@ -34,6 +37,8 @@ namespace async_workshop.Controllers
             var name = await service.GetNameAsync();
 
             return $"My name is: {name}";
+            // returns the awaited value of the task
+            // my name is: Anders
         }
 
 
@@ -100,6 +105,7 @@ namespace async_workshop.Controllers
             }
 
             return "did not crash";
+            // returns did not crash
         }
 
         [HttpGet("/throw-correct")]
@@ -109,13 +115,16 @@ namespace async_workshop.Controllers
             Task nameTask;
             try
             {
+                // renamed variable to xTask
                 nameTask = service.CrashAsync();
 
+                // awaits the result of the task
                 await nameTask;
             }
             catch (Exception ex)
             {
                 return $"Exception message: {ex.Message}";
+                // returns the exception message
             }
 
             return "did not crash";
@@ -178,6 +187,9 @@ namespace async_workshop.Controllers
             catch (Exception ex)
             {
                 var message = ex.Message;
+                //await Response.Body.WriteAsync(Encoding.UTF8.GetBytes($"Exception message: {message}"));
+
+
             }
         }
 

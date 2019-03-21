@@ -28,7 +28,7 @@ namespace async_workshop.Controllers
 
 
 
-
+        // returns a task
         public async Task CrashAsync()
         {
             // simulate db
