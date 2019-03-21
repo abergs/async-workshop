@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace async_workshop.Controllers
 {
@@ -30,6 +29,7 @@ namespace async_workshop.Controllers
             // returns  My name is: task.ToString();
             // My name is: System.Runtime.CompilerServices.AsyncTaskMethodBuilder`1+AsyncStateMachineBox`1[System.String,async_workshop.Controllers.MyService+<GetNameAsync>d__0]
         }
+
 
         [HttpGet("/name-correct")]
         public async Task<ActionResult<string>> NameCorrect()
@@ -111,7 +111,6 @@ namespace async_workshop.Controllers
         [HttpGet("/throw-correct")]
         public async Task<ActionResult<string>> ThrowCorrect()
         {
-            var service = new MyService();
             Task nameTask;
             try
             {
@@ -200,7 +199,7 @@ namespace async_workshop.Controllers
          * return the call to it's caller (asp.net) since asp.net can't await a void method
          * await the exception
          * When there is no-one catching our exception (it can't bubble up to the caller (asp.net)) it crashes the proccess. Thank god it's not ON ERROR RESUME NEXT.
-         * try to write to the body stream but asp.net has already finished the request
+         * 
          * 
          */
         [HttpGet("/void2.1")]
@@ -212,8 +211,6 @@ namespace async_workshop.Controllers
             nameTask = service.CrashAsync();
 
             await nameTask;
-
-            await Response.Body.WriteAsync(Encoding.UTF8.GetBytes("did not crash"));
         }
 
 
@@ -232,7 +229,6 @@ namespace async_workshop.Controllers
         {
             Response.ContentType = "text/plain; charset=utf-8";
 
-            var service = new MyService();
             Task nameTask;
             try
             {
@@ -263,7 +259,6 @@ namespace async_workshop.Controllers
         {
             Response.ContentType = "text/plain; charset=utf-8";
 
-            var service = new MyService();
             try
             {
                 service.VoidCrash();
@@ -292,7 +287,6 @@ namespace async_workshop.Controllers
         {
             Response.ContentType = "text/plain; charset=utf-8";
 
-            var service = new MyService();
             try
             {
                 var task = service.CrashAsyncWithNumber(number);
@@ -315,6 +309,36 @@ namespace async_workshop.Controllers
         {
             GC.Collect();
             return "Force GC";
+        }
+
+        [HttpGet("/hardwork")]
+        public string Hardwork()
+        {
+            var task = service.DoHardWorkAsync();
+
+            return "Done with hardwork";
+        }
+
+        [HttpGet("/hardwork-correct")]
+        public async Task<string> Hardwork(CancellationToken cancellationToken)
+        {
+            var task = service.DoHardWorkAsync(cancellationToken);
+
+            await task;
+
+            return "Done with hardwork";
+        }
+
+        [HttpGet("/hardwork-correct2")]
+        public async Task<string> Hardwork2()
+        {
+            using (var cts = new CancellationTokenSource())
+            {
+                cts.CancelAfter(5000);
+
+                await service.DoHardWorkAsync(cts.Token);
+            }
+            return "Done with hardwork";
         }
     }
 }

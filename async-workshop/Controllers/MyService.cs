@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace async_workshop.Controllers
@@ -57,6 +58,16 @@ namespace async_workshop.Controllers
         {
             await Task.Delay(100);
             throw new Exception("I Crashed 😒. Number: " + number);
+        }
+
+        internal async Task DoHardWorkAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            while (true)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                // simulate call to db
+                await Task.Delay(1000);
+            }
         }
     }
 }
