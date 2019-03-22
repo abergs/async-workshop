@@ -261,7 +261,7 @@ namespace async_workshop.Controllers
 
             try
             {
-                service.VoidCrash();
+                service.AsyncVoidCrash();
 
                 await Response.Body.WriteAsync(Encoding.UTF8.GetBytes("did not crash"));
             }

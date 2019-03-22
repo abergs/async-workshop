@@ -37,7 +37,7 @@ namespace async_workshop.Controllers
             throw new Exception("I Crashed 😒");
         }
 
-        public async void VoidCrash()
+        public async void AsyncVoidCrash()
         {
             // simulate db
             await Task.Delay(100);
