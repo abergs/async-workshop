@@ -5,6 +5,8 @@ Examples and explanation on behaviors for Tasks & Exceptions.
 
 Slides:  https://slides.com/abergs/async-net#/
 
+Presentation är inspirerad av David Fowlers repo om [Async Guidance](https://github.com/davidfowl/AspNetCoreDiagnosticScenarios/blob/master/AsyncGuidance.md)
+
 ## Manus
 
 Berätta om varför, async i .net är svårt. De som inte programmerar .net kan skippa detta om ni vill.
